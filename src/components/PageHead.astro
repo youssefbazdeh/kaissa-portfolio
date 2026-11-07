@@ -1,0 +1,52 @@
+---
+/** Big display title that opens the Works and About pages. */
+interface Props {
+  label: string;
+  lines: string[];
+  script?: string;
+  intro?: string;
+}
+const { label, lines, script, intro } = Astro.props;
+---
+
+<header class="page-head wrap">
+  <span class="label">{label}</span>
+  <div class="headline">
+    <h1 class="display title" data-reveal-lines>
+      {lines.map((l, i) => <span class:list={['line', i % 2 && 'indent']}><span>{l}</span></span>)}
+    </h1>
+    {script && <p class="script page-script" data-script aria-hidden="true">{script}</p>}
+  </div>
+  {intro && <p class="intro" data-fade>{intro}</p>}
+</header>
+
+<style>
+  .page-head {
+    display: grid;
+    gap: 1.25rem;
+    padding-top: 8rem;
+  }
+  .headline { position: relative; }
+  .title { font-size: var(--display-xl); }
+  .indent { padding-left: 14vw; }
+  .page-script {
+    position: absolute;
+    right: 6%;
+    bottom: -0.2em;
+    font-size: clamp(3rem, 9vw, 9rem);
+    transform: rotate(-7deg);
+  }
+  .intro {
+    justify-self: end;
+    max-width: 38ch;
+    margin-top: 1.5rem;
+    font-size: var(--text-l);
+    font-weight: 500;
+    line-height: 1.22;
+    letter-spacing: -0.02em;
+  }
+  @media (max-width: 640px) {
+    .indent { padding-left: 0; }
+    .intro { justify-self: start; }
+  }
+</style>

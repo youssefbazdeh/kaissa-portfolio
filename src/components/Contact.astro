@@ -1,0 +1,101 @@
+---
+import site from '../data/site.json';
+interface Props {
+  /** Contact page: h1 heading, its own kicker, and the email / LinkedIn shown in full. */
+  page?: boolean;
+}
+const { page = false } = Astro.props;
+const c = site.contact;
+const Heading = page ? 'h1' : 'h2';
+---
+
+<section id="contact" class:list={['contact wrap', page ? 'is-page' : 'section']}>
+  <div class="kicker">
+    <span class="label">{page ? c.pageKicker : c.kicker}</span>
+    <span class="rule" aria-hidden="true"></span>
+  </div>
+
+  <div class="headline">
+    <Heading class="display big" data-reveal-lines>
+      {c.lines.map((l, i) => <span class:list={['line', `c${i}`]}><span>{l}</span></span>)}
+    </Heading>
+    <p class="script contact-script" data-script aria-hidden="true">{c.script}</p>
+  </div>
+
+  {page && (
+    <div class="details">
+      <span class="label">Reach me</span>
+      <dl>
+        <div><dt>Email</dt><dd>{c.email ? <a href={`mailto:${c.email}`}>{c.email}</a> : <span class="todo">Coming soon</span>}</dd></div>
+        <div><dt>LinkedIn</dt><dd>{c.linkedin ? <a href={c.linkedin} target="_blank" rel="noopener">{c.linkedin.replace(/^https?:\/\/(www\.)?/, '')}</a> : <span class="todo">Coming soon</span>}</dd></div>
+      </dl>
+    </div>
+  )}
+
+  <div class="topics">
+    <span class="label">{c.topicsLabel}</span>
+    <ul>{c.topics.map((t) => <li>{t}</li>)}</ul>
+  </div>
+</section>
+
+<style>
+  .contact { position: relative; padding-bottom: 6rem; }
+  .kicker { display: flex; align-items: center; gap: 1rem; margin-bottom: 1.5rem; }
+  .rule { flex: 1; height: 1px; background: var(--line); }
+  .big { font-size: var(--display-xl); text-align: center; }
+  .c1 { padding-left: 18vw; }
+  .headline { position: relative; }
+  .contact-script {
+    position: absolute;
+    right: 14%;
+    top: 50%;
+    font-size: clamp(3.5rem, 11vw, 11rem);
+    transform: rotate(-8deg);
+  }
+  .topics {
+    display: grid;
+    grid-template-columns: 1fr 2fr;
+    gap: var(--gutter);
+    margin-top: 5rem;
+  }
+  .topics ul {
+    display: grid;
+    gap: 0.15em;
+    font-size: var(--display-s);
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: -0.04em;
+    line-height: 1;
+  }
+  .is-page { padding-top: 8rem; }
+  .details {
+    display: grid;
+    grid-template-columns: 1fr 2fr;
+    gap: var(--gutter);
+    margin-top: 5rem;
+  }
+  .details dl { margin: 0; display: grid; border-top: 1px solid var(--line); }
+  .details dl > div {
+    display: grid;
+    grid-template-columns: 8rem 1fr;
+    gap: 1rem;
+    padding-block: 1rem;
+    border-bottom: 1px solid var(--line);
+    align-items: baseline;
+  }
+  .details dt { font-size: var(--text-s); font-weight: 500; text-transform: uppercase; }
+  .details dd {
+    margin: 0;
+    font-size: var(--text-l);
+    font-weight: 500;
+    letter-spacing: -0.02em;
+    overflow-wrap: anywhere;
+    user-select: all;
+  }
+  .details a:hover { opacity: 0.6; }
+  .todo { color: var(--muted); }
+  @media (max-width: 760px) {
+    .topics, .details { grid-template-columns: 1fr; }
+    .c1 { padding-left: 0; }
+  }
+</style>

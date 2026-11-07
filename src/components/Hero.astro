@@ -1,0 +1,45 @@
+---
+import site from '../data/site.json';
+---
+
+<section class="hero wrap" aria-label="Intro">
+  <h1 class="display hero-title" data-reveal-lines>
+    {site.heroLines.map((line, i) => (
+      <span class:list={['line', `l${i}`]}><span>{line}</span></span>
+    ))}
+  </h1>
+  <p class="script hero-script" data-script aria-hidden="true">{site.heroScript}</p>
+  <p class="hero-lead">{site.bioLead}</p>
+</section>
+
+<style>
+  .hero {
+    position: relative;
+    min-height: 100svh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding-top: 6rem;
+  }
+  .hero-title { font-size: var(--display-xl); }
+  /* Stagger like the reference: first line pushed right. */
+  .l0 { padding-left: 12vw; }
+  .hero-script {
+    position: absolute;
+    right: var(--gutter);
+    top: 58%;
+    font-size: clamp(4rem, 13vw, 14rem);
+    transform: rotate(-6deg);
+  }
+  .hero-lead {
+    margin-top: 2.5rem;
+    max-width: 22ch;
+    font-size: var(--text-s);
+    font-weight: 500;
+    text-transform: uppercase;
+  }
+  @media (max-width: 640px) {
+    .l0 { padding-left: 0; }
+    .hero-script { top: auto; bottom: 22%; }
+  }
+</style>

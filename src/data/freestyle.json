@@ -1,0 +1,7 @@
+{
+  "label": "Freestyle",
+  "tiles": [
+    { "lines": ["PHOTO", "GRAPHY"], "note": "", "image": "", "tone": "#c2185b", "href": "" },
+    { "lines": ["*WEIRD", "IDEAS"], "note": "[Certified weirdo]", "image": "", "tone": "#3b3b3b", "href": "" }
+  ]
+}

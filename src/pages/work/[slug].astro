@@ -1,0 +1,100 @@
+---
+import { getCollection, type CollectionEntry } from 'astro:content';
+import Base from '../../layouts/Base.astro';
+import TopBar from '../../components/TopBar.astro';
+import Block from '../../components/blocks/Block.astro';
+import Media from '../../components/Media.astro';
+
+export async function getStaticPaths() {
+  const projects = (await getCollection('projects', (p) => !p.data.draft))
+    .sort((a, b) => a.data.order - b.data.order);
+  return projects.map((project, i) => ({
+    params: { slug: project.id },
+    props: { project, next: projects[(i + 1) % projects.length] },
+  }));
+}
+
+interface Props {
+  project: CollectionEntry<'projects'>;
+  next: CollectionEntry<'projects'>;
+}
+const { project, next } = Astro.props;
+const d = project.data;
+const lines = d.titleLines ?? [d.title];
+const base = import.meta.env.BASE_URL;
+---
+
+<Base title={d.title} description={d.intro}>
+  <TopBar />
+  <main class="case">
+    <header class="case-head wrap">
+      <span class="label">{d.client}</span>
+      <h1 class="display case-title" data-reveal-lines>
+        {lines.map((l, i) => <span class:list={['line', i % 2 && 'indent']}><span>{l}</span></span>)}
+      </h1>
+      <p class="case-intro" data-fade>{d.intro}</p>
+    </header>
+
+    <div class="case-cover wrap" data-fade>
+      <div class="cover-media"><Media media={d.cover} tone={d.tone} eager /></div>
+    </div>
+
+    {d.sections.map((block) => <Block block={block} tone={d.tone} />)}
+
+    <section class="credits wrap section">
+      <ul>
+        {d.credits.map((c) => (
+          <li><span class="label">{c.role}</span><span>{c.name}</span></li>
+        ))}
+      </ul>
+    </section>
+
+    {next.id !== project.id && (
+      <a class="next wrap section" href={`${base}work/${next.id}/`}>
+        <span class="label">Next project</span>
+        <span class="display next-title">{next.data.title}</span>
+      </a>
+    )}
+
+  </main>
+</Base>
+
+<style>
+  .case-head {
+    display: grid;
+    gap: 1.25rem;
+    padding-top: 7rem;
+  }
+  .case-title { font-size: var(--display-m); }
+  .indent { padding-left: 14vw; }
+  .case-intro {
+    justify-self: end;
+    max-width: 38ch;
+    margin-top: 1.5rem;
+    font-size: var(--text-l);
+    font-weight: 500;
+    line-height: 1.22;
+    letter-spacing: -0.02em;
+  }
+  .case-cover { margin-top: 4rem; }
+  .cover-media {
+    aspect-ratio: 16 / 9;
+    border-radius: var(--radius);
+    overflow: hidden;
+  }
+  .credits ul {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr));
+    gap: 1.25rem var(--gutter);
+    padding-top: 1.25rem;
+    border-top: 1px solid var(--line);
+  }
+  .credits li { display: grid; gap: 0.3rem; font-weight: 500; text-transform: uppercase; font-size: var(--text-s); }
+  .next { display: grid; gap: 1rem; }
+  .next-title { font-size: var(--display-m); transition: letter-spacing 0.6s var(--ease-out); }
+  .next:hover .next-title { letter-spacing: -0.035em; }
+  @media (max-width: 640px) {
+    .indent { padding-left: 0; }
+    .case-intro { justify-self: start; }
+  }
+</style>

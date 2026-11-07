@@ -1,0 +1,101 @@
+{
+  "name": "Oumaima Kaissa",
+  "shortName": "Kaissa",
+  "role": "Creative Copywriter",
+  "heroLines": [
+    "I'M KAISSA.",
+    "A CREATIVE",
+    "COPYWRITER"
+  ],
+  "heroScript": "& a weirdo",
+  "seoDescription": "Creative, copywriter and part-time content creator helping brands feel human and alive.",
+  "bioLead": "Creative, part-time content creator and a weirdo.",
+  "bio": [
+    "Hi! I'm Oumaima Kaissa (everyone just calls me Kaissa). As a kid, my mom used to say that I had a \"tricky way\" of talking about things. She just loved my stories.",
+    "Years later, here I am, using that very same superpower to help brands feel human and alive. Over the past few years, I've tried a bit of everything: content creation, social media, branding, strategy and copywriting. Each time, my favourite part was always the same: finding the soul of the story.",
+    "I'm currently looking for my next creative adventure, so if you're hiring (or just curious), let's talk."
+  ],
+  "awards": [],
+  "traits": [
+    {
+      "label": "Multilingual brain",
+      "sticker": "stickers/multilingual-brain.webp"
+    },
+    {
+      "label": "Meme powered",
+      "sticker": "stickers/meme-powered.webp"
+    },
+    {
+      "label": "GOT obsessed",
+      "sticker": "stickers/got-obsessed.webp",
+      "note": "Team Jon Snow"
+    },
+    {
+      "label": "Big dreamer",
+      "sticker": "stickers/big-dreamer.webp"
+    },
+    {
+      "label": "Brik dependent",
+      "sticker": "stickers/brik-dependent.webp"
+    },
+    {
+      "label": "Chronically online",
+      "sticker": "stickers/chronically-online.webp"
+    },
+    {
+      "label": "Kanye's n°1 fan",
+      "sticker": "stickers/kanye-fan.webp"
+    },
+    {
+      "label": "Random fact collector",
+      "sticker": "stickers/fact-collector.webp"
+    },
+    {
+      "label": "Overthinking champion",
+      "sticker": "stickers/overthinking-champion.webp"
+    },
+    {
+      "label": "Algorithm victim",
+      "sticker": "stickers/algorithm-victim.webp"
+    },
+    {
+      "label": "Playlist perfectionist",
+      "sticker": "stickers/playlist-perfectionist.webp"
+    },
+    {
+      "label": "Randomly creative",
+      "sticker": "stickers/randomly-creative.webp"
+    }
+  ],
+  "contact": {
+    "kicker": "If you scrolled this far,",
+    "lines": [
+      "LET'S",
+      "TALK"
+    ],
+    "script": "soon?",
+    "topicsLabel": "We can talk about:",
+    "topics": [
+      "Your next campaign",
+      "Brands that feel human",
+      "Stories worth telling",
+      "And much more"
+    ],
+    "email": "",
+    "linkedin": "",
+    "pageKicker": "Say hi"
+  },
+  "skills": [
+    "Content creation",
+    "Social media management",
+    "Creative copywriting",
+    "Data analysis",
+    "Strategy & planning",
+    "Performance tracking"
+  ],
+  "aboutPhoto": {
+    "image": "/media/about/kaissa-child.jpg",
+    "alt": "Kaissa as a child holding a white teddy bear",
+    "caption": "Hey there!"
+  }
+}

@@ -1,0 +1,153 @@
+---
+import site from '../data/site.json';
+const base = import.meta.env.BASE_URL;
+const path = Astro.url.pathname;
+const links = [
+  { label: 'Works', href: `${base}work/` },
+  { label: 'About', href: `${base}about/` },
+  { label: 'Contact', href: `${base}contact/` },
+];
+const isCurrent = (href: string) => path === href || (href.endsWith('work/') && path.startsWith(href));
+---
+
+<header class="topbar wrap">
+  <a class="name" href={base}>{site.name}</a>
+  <span class="role">{site.role}</span>
+
+  <div class="menu" data-menu>
+    <button
+      class="menu-btn"
+      type="button"
+      aria-expanded="false"
+      aria-controls="site-menu"
+      aria-label="Open menu"
+      data-menu-btn
+    >
+      <span class="dot" aria-hidden="true"></span>
+    </button>
+    <nav id="site-menu" class="menu-panel" aria-label="Main" data-menu-panel>
+      <ul>
+        {links.map((l, i) => (
+          <li style={`--i:${i}`}>
+            <a href={l.href} aria-current={isCurrent(l.href) ? 'page' : undefined}>{l.label}</a>
+          </li>
+        ))}
+      </ul>
+    </nav>
+  </div>
+</header>
+
+<script>
+  const root = document.querySelector<HTMLElement>('[data-menu]');
+  const btn = root?.querySelector<HTMLButtonElement>('[data-menu-btn]');
+  const panel = root?.querySelector<HTMLElement>('[data-menu-panel]');
+  if (root && btn && panel) {
+    const setOpen = (open: boolean) => {
+      root.classList.toggle('is-open', open);
+      btn.setAttribute('aria-expanded', String(open));
+      btn.setAttribute('aria-label', open ? 'Close menu' : 'Open menu');
+      if (open) panel.querySelector<HTMLAnchorElement>('a')?.focus({ preventScroll: true });
+    };
+    btn.addEventListener('click', () => setOpen(!root.classList.contains('is-open')));
+    document.addEventListener('click', (e) => {
+      if (!root.contains(e.target as Node)) setOpen(false);
+    });
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && root.classList.contains('is-open')) {
+        setOpen(false);
+        btn.focus();
+      }
+    });
+  }
+</script>
+
+<style>
+  .topbar {
+    position: fixed;
+    inset: 0 0 auto 0;
+    z-index: 50;
+    display: grid;
+    grid-template-columns: 1fr 1fr auto;
+    align-items: center;
+    gap: 1rem;
+    padding-block: 0.85rem;
+    font-size: var(--text-s);
+    font-weight: 600;
+    text-transform: uppercase;
+    background: color-mix(in srgb, var(--bg) 86%, transparent);
+    -webkit-backdrop-filter: blur(10px);
+    backdrop-filter: blur(10px);
+  }
+  .role { font-weight: 500; }
+
+  /* ---------- Menu ---------- */
+  .menu { position: relative; justify-self: end; }
+  .menu-btn {
+    display: grid;
+    place-items: center;
+    width: 2.75rem;
+    height: 2.75rem;
+    margin: -0.4rem -0.4rem -0.4rem 0;
+    padding: 0;
+    border: 0;
+    background: none;
+    cursor: pointer;
+  }
+  .dot {
+    width: 1.75rem;
+    height: 1.75rem;
+    border-radius: 50%;
+    background: var(--accent);
+    transition: transform 0.45s var(--ease-out);
+  }
+  .menu-btn:hover .dot { transform: scale(1.12); }
+  .is-open .dot { transform: scale(0.72); }
+
+  .menu-panel {
+    position: absolute;
+    top: calc(100% + 0.9rem);
+    right: 0;
+    min-width: 11rem;
+    padding: 1.1rem 1.4rem 1.2rem;
+    background: var(--accent);
+    color: var(--bg);
+    clip-path: inset(0 0 100% 100%);
+    visibility: hidden;
+    transition: clip-path 0.5s var(--ease-out), visibility 0s linear 0.5s;
+  }
+  .is-open .menu-panel {
+    clip-path: inset(0 0 0 0);
+    visibility: visible;
+    transition: clip-path 0.55s var(--ease-out), visibility 0s;
+  }
+  .menu-panel ul { display: grid; gap: 0.35rem; text-align: right; }
+  .menu-panel li {
+    opacity: 0;
+    transform: translateY(-6px);
+    transition: opacity 0.25s, transform 0.4s var(--ease-out);
+  }
+  .is-open .menu-panel li {
+    opacity: 1;
+    transform: none;
+    transition-delay: calc(0.12s + var(--i) * 0.06s);
+  }
+  .menu-panel a {
+    display: inline-block;
+    padding-block: 0.2rem;
+    font-size: 1.35rem;
+    font-weight: 500;
+    letter-spacing: -0.01em;
+    transition: transform 0.35s var(--ease-out);
+  }
+  .menu-panel a:hover { transform: translateX(-6px); }
+  .menu-panel a[aria-current='page']::before { content: '● '; font-size: 0.6em; vertical-align: middle; }
+  .menu-panel a:focus-visible { outline-color: var(--bg); }
+
+  @media (max-width: 640px) {
+    .topbar { grid-template-columns: 1fr auto; }
+    .role { display: none; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .menu-panel, .is-open .menu-panel, .menu-panel li, .is-open .menu-panel li, .dot { transition: none; }
+  }
+</style>

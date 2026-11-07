@@ -1,0 +1,184 @@
+---
+/**
+ * Renders one case-study block. To add a new block type:
+ * 1. add it to the `block` union in src/content.config.ts
+ * 2. add a branch here
+ */
+import Media from '../Media.astro';
+
+interface Props { block: any; tone: string }
+const { block: b, tone } = Astro.props;
+// Repeat the word enough times to fill a row at any width.
+const repeated = b.type === 'repeat-word-band' ? Array(6).fill(b.word).join('  ') : '';
+---
+
+{b.type === 'brief' && (
+  <section class="b-brief wrap section" data-fade>
+    <dl>
+      {b.items.map((it: any) => (
+        <div class="row">
+          <dt class="label">{it.label}</dt>
+          <dd>{it.value}</dd>
+        </div>
+      ))}
+    </dl>
+  </section>
+)}
+
+{b.type === 'context' && (
+  <section class="b-context wrap section" data-fade>
+    {b.label && <h2 class="label">{b.label}</h2>}
+    <p>{b.text}</p>
+  </section>
+)}
+
+{b.type === 'statement' && (
+  <section class="b-statement wrap section">
+    <p class="display" dir="auto" data-reveal-words>{b.text}</p>
+  </section>
+)}
+
+{b.type === 'execution-list' && (
+  <section class="b-list wrap section" data-fade>
+    <h2 class="label">{b.label}</h2>
+    <ol>
+      {b.items.map((it: string, i: number) => (
+        <li><span class="num">{String(i + 1).padStart(2, '0')}</span><span>{it}</span></li>
+      ))}
+    </ol>
+  </section>
+)}
+
+{b.type === 'channels' && (
+  <section class="b-channels wrap section" data-fade>
+    <h2 class="label">{b.label}</h2>
+    <ul>{b.items.map((it: string) => <li>{it}</li>)}</ul>
+  </section>
+)}
+
+{b.type === 'repeat-word-band' && (
+  <section class="b-band section" aria-label={b.word}>
+    <div class="band-words" aria-hidden="true">
+      {[0, 1, 2].map((i) => (
+        <span class="display band-row" data-drift={i % 2 ? '1' : '-1'}>{repeated}</span>
+      ))}
+    </div>
+    <div class="band-media"><Media media={b.media} tone={tone} /></div>
+  </section>
+)}
+
+{b.type === 'media-grid' && (
+  <section class="b-grid wrap section">
+    {b.label && <h2 class="label">{b.label}</h2>}
+    <div class:list={['grid', b.ratio === 'auto' && 'natural']} style={`--cols:${b.columns};--ratio:${b.ratio === 'auto' ? 'auto' : b.ratio}`}>
+      {b.items.map((m: any) => (
+        <figure data-fade>
+          <div class="cell"><Media media={m} tone={tone} /></div>
+          {m.caption && <figcaption>{m.caption}</figcaption>}
+        </figure>
+      ))}
+    </div>
+  </section>
+)}
+
+<style>
+  /* brief */
+  .b-brief dl { margin: 0; display: grid; border-top: 1px solid var(--line); }
+  .b-brief .row {
+    display: grid;
+    grid-template-columns: 1fr 2fr;
+    gap: var(--gutter);
+    padding-block: 1.1rem;
+    border-bottom: 1px solid var(--line);
+  }
+  .b-brief dd {
+    margin: 0;
+    font-size: var(--text-l);
+    font-weight: 500;
+    line-height: 1.22;
+    letter-spacing: -0.02em;
+    max-width: 40ch;
+  }
+
+  /* context */
+  .b-context {
+    display: grid;
+    grid-template-columns: 1fr 2fr;
+    gap: var(--gutter);
+  }
+  .b-context p { font-size: var(--text-l); font-weight: 500; line-height: 1.22; letter-spacing: -0.02em; max-width: 42ch; }
+
+  /* statement */
+  .b-statement p { font-size: var(--display-m); max-width: 16ch; }
+
+  /* execution list */
+  .b-list { display: grid; grid-template-columns: 1fr 2fr; gap: var(--gutter); }
+  .b-list ol { margin: 0; padding: 0; list-style: none; display: grid; }
+  .b-list li {
+    display: grid;
+    grid-template-columns: 3rem 1fr;
+    padding-block: 0.9rem;
+    border-bottom: 1px solid var(--line);
+    font-size: var(--text-l);
+    font-weight: 500;
+    line-height: 1.22;
+    letter-spacing: -0.02em;
+  }
+  .b-list li:first-child { border-top: 1px solid var(--line); }
+  .num { font-size: var(--text-s); padding-top: 0.4em; }
+
+  /* channels */
+  .b-channels { display: grid; grid-template-columns: 1fr 2fr; gap: var(--gutter); }
+  .b-channels ul { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+  .b-channels li {
+    padding: 0.5rem 0.95rem;
+    border: 1px solid var(--accent);
+    border-radius: 999px;
+    font-size: var(--text-s);
+    font-weight: 600;
+    text-transform: uppercase;
+    transition: background 0.25s, color 0.25s;
+  }
+  .b-channels li:hover { background: var(--accent); color: var(--bg); }
+
+  /* repeat-word band */
+  .b-band { position: relative; display: grid; place-items: center; overflow: hidden; padding-block: 2rem; }
+  .band-words {
+    position: absolute;
+    inset: 0;
+    display: grid;
+    align-content: center;
+    gap: 0.05em;
+  }
+  .band-row {
+    display: block;
+    white-space: pre;
+    font-size: var(--display-l);
+    color: color-mix(in srgb, var(--accent) 55%, white);
+    will-change: transform;
+  }
+  .band-row:nth-child(2) { color: transparent; -webkit-text-stroke: 1.5px var(--accent); }
+  .band-media {
+    position: relative;
+    z-index: 1;
+    width: min(62vw, 760px);
+    aspect-ratio: 16 / 10;
+    border-radius: var(--radius);
+    overflow: hidden;
+    box-shadow: 0 30px 80px -30px rgba(0, 40, 140, 0.45);
+  }
+
+  /* media grid */
+  .b-grid .label { display: block; margin-bottom: 1.25rem; }
+  .grid { display: grid; grid-template-columns: repeat(var(--cols), 1fr); gap: var(--gutter); }
+  figure { margin: 0; }
+  .cell { aspect-ratio: var(--ratio, 4 / 3); border-radius: var(--radius); overflow: hidden; }
+  .natural .cell :global(img) { height: auto; }
+  figcaption { margin-top: 0.6rem; font-size: var(--text-s); font-weight: 500; text-transform: uppercase; }
+
+  @media (max-width: 760px) {
+    .b-brief .row, .b-context, .b-list, .b-channels { grid-template-columns: 1fr; gap: 0.75rem; }
+    .grid { grid-template-columns: 1fr; }
+    .band-media { width: calc(100vw - 2 * var(--gutter)); }
+  }
+</style>

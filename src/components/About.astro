@@ -1,0 +1,87 @@
+---
+import site from '../data/site.json';
+import Media from './Media.astro';
+const photo = site.aboutPhoto;
+---
+
+<section id="about" class="about wrap section">
+  <div class="about-side">
+    <h2 class="label">The story</h2>
+    {photo && (
+      <figure class="polaroid" data-fade>
+        <div class="polaroid-media">
+          <Media media={{ image: photo.image, alt: photo.alt, label: 'Photo coming' }} tone="#c9b9a6" />
+        </div>
+        {photo.caption && <figcaption>{photo.caption}</figcaption>}
+      </figure>
+    )}
+    {site.awards.length > 0 && (
+      <div class="awards">
+        <h3 class="label">Some awards</h3>
+        <ul>{site.awards.map((a) => <li>{a}</li>)}</ul>
+      </div>
+    )}
+  </div>
+  <div class="about-main">
+    <div class="about-body" data-fade>
+      {site.bio.map((p) => <p>{p}</p>)}
+    </div>
+    {site.skills?.length > 0 && (
+      <div class="skills" data-fade>
+        <h3 class="label">Skills</h3>
+        <ul>{site.skills.map((s) => <li>{s}</li>)}</ul>
+      </div>
+    )}
+  </div>
+</section>
+
+<style>
+  .about {
+    display: grid;
+    grid-template-columns: 1fr 2fr;
+    gap: var(--gutter);
+  }
+  .about-side { display: grid; align-content: start; gap: 2rem; }
+  .polaroid {
+    margin: 0;
+    width: min(100%, 17rem);
+    padding: 0.75rem 0.75rem 0;
+    background: #fff;
+    box-shadow: 0 18px 40px -18px rgba(0, 30, 110, 0.35), 0 0 0 1px var(--line);
+    transform: rotate(-3deg);
+    transition: transform 0.5s var(--ease-out);
+  }
+  .polaroid:hover { transform: rotate(0deg) scale(1.02); }
+  .polaroid-media { aspect-ratio: 1; overflow: hidden; }
+  .polaroid figcaption {
+    padding: 0.7rem 0 0.9rem;
+    text-align: center;
+    font-family: var(--font-script);
+    font-size: 1.6rem;
+    line-height: 1;
+  }
+  .awards ul { margin-top: 0.75rem; font-size: var(--text-s); display: grid; gap: 0.25rem; }
+  .about-main { display: grid; align-content: start; gap: 3rem; }
+  .about-body {
+    display: grid;
+    gap: 1.1em;
+    font-size: var(--text-l);
+    font-weight: 500;
+    line-height: 1.22;
+    letter-spacing: -0.02em;
+    max-width: 38ch;
+  }
+  .skills { display: grid; gap: 1rem; }
+  .skills ul { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+  .skills li {
+    padding: 0.5rem 0.95rem;
+    border: 1px solid var(--accent);
+    border-radius: 999px;
+    font-size: var(--text-s);
+    font-weight: 600;
+    text-transform: uppercase;
+  }
+  @media (max-width: 760px) {
+    .about { grid-template-columns: 1fr; }
+  }
+</style>

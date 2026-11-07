@@ -1,0 +1,14 @@
+{
+  "detector": {
+    "ignoreRules": [],
+    "ignoreFiles": [],
+    "ignoreValues": [
+      {
+        "rule": "overused-font",
+        "value": "inter",
+        "createdAt": "2026-11-03T21:11:46.062Z",
+        "reason": "Claude: the user asked for a look-alike of ananogabunia.com, whose headlines are set in Inter (verified in the live page's computed styles); font is a token in tokens.css so it can be swapped later"
+      }
+    ]
+  }
+}

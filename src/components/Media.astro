@@ -1,0 +1,63 @@
+---
+/**
+ * Renders an image, a muted looping video, an embed, or, when none is set yet,
+ * a styled placeholder in the project's tone colour.
+ */
+interface Props {
+  media?: {
+    image?: string;
+    video?: string;
+    poster?: string;
+    embed?: string;
+    alt?: string;
+    label?: string;
+  };
+  tone?: string;
+  class?: string;
+  eager?: boolean;
+}
+const { media = {}, tone = 'var(--accent)', class: cls = '', eager = false } = Astro.props;
+---
+
+{media.video ? (
+  <video
+    class:list={['media', cls]}
+    src={media.video}
+    poster={media.poster}
+    muted
+    loop
+    playsinline
+    preload="metadata"
+    data-autoplay
+  />
+) : media.embed ? (
+  <iframe
+    class:list={['media', cls]}
+    src={media.embed}
+    title={media.alt || media.label || 'Embedded video'}
+    loading="lazy"
+    allow="autoplay; encrypted-media; picture-in-picture"
+    allowfullscreen
+  />
+) : media.image ? (
+  <img
+    class:list={['media', cls]}
+    src={media.image}
+    alt={media.alt ?? ''}
+    loading={eager ? 'eager' : 'lazy'}
+    decoding="async"
+  />
+) : (
+  <div class:list={['media ph', cls]} style={`--tone:${tone}`} role="img" aria-label={media.label ?? 'Visual coming soon'}>
+    <span class="ph-label">{media.label ?? 'Visual coming'}</span>
+  </div>
+)}
+
+<style>
+  .media {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border: 0;
+  }
+</style>

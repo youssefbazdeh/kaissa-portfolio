@@ -1,0 +1,26 @@
+---
+import { getCollection } from 'astro:content';
+import Base from '../layouts/Base.astro';
+import TopBar from '../components/TopBar.astro';
+import Hero from '../components/Hero.astro';
+import Traits from '../components/Traits.astro';
+import WorksGrid from '../components/WorksGrid.astro';
+import Freestyle from '../components/Freestyle.astro';
+import Archive from '../components/Archive.astro';
+import Contact from '../components/Contact.astro';
+
+const featured = (await getCollection('projects', (p) => !p.data.draft && p.data.featured))
+  .sort((a, b) => a.data.order - b.data.order);
+---
+
+<Base>
+  <TopBar />
+  <main>
+    <Hero />
+    <Traits />
+    <WorksGrid projects={featured} />
+    <Freestyle />
+    <Archive />
+    <Contact />
+  </main>
+</Base>

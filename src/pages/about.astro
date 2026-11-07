@@ -1,0 +1,17 @@
+---
+import Base from '../layouts/Base.astro';
+import TopBar from '../components/TopBar.astro';
+import PageHead from '../components/PageHead.astro';
+import About from '../components/About.astro';
+import Traits from '../components/Traits.astro';
+import site from '../data/site.json';
+---
+
+<Base title="About">
+  <TopBar />
+  <main>
+    <PageHead label="About me" lines={['HEY,', `I'M ${site.shortName.toUpperCase()}`]} script="hi!" />
+    <About />
+    <div class="section"><Traits /></div>
+  </main>
+</Base>

@@ -1,0 +1,66 @@
+---
+import data from '../data/freestyle.json';
+import Media from './Media.astro';
+---
+
+<section class="freestyle wrap section">
+  <div class="section-head"><h2 class="label">{data.label}</h2></div>
+  <div class="tiles">
+    {data.tiles.map((t) => {
+      const Tag = t.href ? 'a' : 'div';
+      return (
+        <Tag class="tile" href={t.href || undefined} data-fade>
+          <div class="tile-media">
+            <Media media={{ image: t.image, label: 'Visual coming' }} tone={t.tone} />
+          </div>
+          <span class="display tile-word">
+            {t.lines.map((l) => <span>{l}</span>)}
+          </span>
+          {t.note && <span class="tile-note">{t.note}</span>}
+        </Tag>
+      );
+    })}
+  </div>
+</section>
+
+<style>
+  .tiles {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--gutter);
+  }
+  .tile { position: relative; display: block; padding-bottom: 4.5rem; }
+  .tile-media {
+    aspect-ratio: 4 / 3;
+    border-radius: var(--radius);
+    overflow: hidden;
+  }
+  /* The headline overlaps the bottom of the image, like the reference. */
+  .tile-word {
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    display: grid;
+    font-size: var(--display-l);
+    color: var(--accent);
+  }
+  .tile-word span:first-child {
+    background: var(--bg);
+    padding: 0.06em 0.12em 0 0.1em;
+    margin-left: 18%;
+    width: fit-content;
+  }
+  .tile-note {
+    position: absolute;
+    right: 0;
+    bottom: 0.4rem;
+    font-size: var(--text-s);
+    font-weight: 500;
+    text-transform: uppercase;
+  }
+  a.tile .tile-media :global(.media) { transition: transform 0.9s var(--ease-out); }
+  a.tile:hover .tile-media :global(.media) { transform: scale(1.04); }
+  @media (max-width: 760px) {
+    .tiles { grid-template-columns: 1fr; gap: 3rem; }
+  }
+</style>

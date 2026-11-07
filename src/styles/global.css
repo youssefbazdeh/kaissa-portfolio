@@ -1,0 +1,119 @@
+@import './tokens.css';
+
+*, *::before, *::after { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; }
+html.lenis, html.lenis body { height: auto; }
+.lenis.lenis-smooth { scroll-behavior: auto !important; }
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--ink);
+  font-family: var(--font-sans);
+  font-size: var(--text-m);
+  line-height: 1.4;
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+}
+img, video, iframe { display: block; max-width: 100%; }
+a { color: inherit; text-decoration: none; }
+[id] { scroll-margin-top: 4.5rem; }
+p { margin: 0; }
+ul { margin: 0; padding: 0; list-style: none; }
+h1, h2, h3 { margin: 0; font-weight: inherit; }
+::selection { background: var(--accent); color: var(--bg); }
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
+
+/* Cross-document page transitions (no JS needed). */
+@view-transition { navigation: auto; }
+
+/* ---------- Shared type ---------- */
+.display {
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: var(--display-tracking);
+  line-height: var(--display-leading);
+}
+.label {
+  font-size: var(--text-s);
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.01em;
+}
+.label::before { content: '['; }
+.label::after { content: ']'; }
+
+/* Script accent with the soft blur + glow. */
+.script {
+  font-family: var(--font-script);
+  font-weight: 400;
+  text-transform: none;
+  letter-spacing: 0;
+  line-height: 1;
+  color: color-mix(in srgb, var(--accent-soft) 70%, white);
+  text-shadow:
+    0 0 0.08em color-mix(in srgb, var(--accent) 60%, transparent),
+    0 0 0.35em color-mix(in srgb, var(--accent-soft) 70%, transparent);
+  filter: blur(0.6px);
+  pointer-events: none;
+}
+
+.wrap { padding-inline: var(--gutter); }
+.section { margin-top: var(--section); }
+.section-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 1rem;
+  margin-bottom: 1.25rem;
+}
+
+/* Line-mask used by the reveal animation. */
+.line { display: block; overflow: hidden; padding-bottom: 0.04em; margin-bottom: -0.04em; }
+.line > span { display: block; }
+
+/* ---------- Placeholder media ---------- */
+.ph {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  background:
+    radial-gradient(120% 90% at 20% 15%, color-mix(in srgb, var(--tone) 55%, white) 0%, transparent 60%),
+    linear-gradient(160deg, var(--tone), color-mix(in srgb, var(--tone) 55%, black));
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+}
+.ph::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: radial-gradient(rgba(255,255,255,0.14) 1px, transparent 1px);
+  background-size: 14px 14px;
+  mix-blend-mode: overlay;
+}
+.ph-label {
+  position: relative;
+  z-index: 1;
+  color: rgba(255,255,255,0.85);
+  font-size: var(--text-s);
+  font-weight: 500;
+  text-transform: uppercase;
+}
+.ph-label::before { content: '[ '; }
+.ph-label::after { content: ' ]'; }
+
+/* ---------- Marquee ---------- */
+.marquee { overflow: hidden; width: 100%; }
+.marquee-track {
+  display: flex;
+  width: max-content;
+  animation: marquee var(--speed, 40s) linear infinite;
+}
+.marquee:hover .marquee-track { animation-play-state: paused; }
+@keyframes marquee { to { transform: translateX(-50%); } }
+
+@media (prefers-reduced-motion: reduce) {
+  .marquee-track { animation: none; }
+  @view-transition { navigation: none; }
+}

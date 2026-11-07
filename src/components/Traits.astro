@@ -1,0 +1,121 @@
+---
+import site from '../data/site.json';
+
+const base = import.meta.env.BASE_URL;
+
+/*
+ * Loose, hand-placed feel: each fact gets its own "pose" from this list
+ * (cycled), so the row never looks like a grid of icon + label.
+ *   side  where the sticker sits relative to the text
+ *   rot   sticker tilt (deg)      y   vertical nudge (rem)
+ *   size  sticker size (rem)      lift  text baseline nudge (rem)
+ *   indent which line is pushed in ('first' | 'second')
+ */
+const poses = [
+  { side: 'after', rot: 14, y: -0.9, size: 5.4, lift: 0.4, indent: 'second' },
+  { side: 'before', rot: -12, y: 0.5, size: 5.6, lift: -0.5, indent: 'first' },
+  { side: 'after', rot: -7, y: 0.9, size: 6, lift: 0.1, indent: 'second' },
+  { side: 'top', rot: 10, y: 0, size: 4.6, lift: 1.1, indent: 'first' },
+  { side: 'before', rot: 18, y: -0.6, size: 4.8, lift: 0.6, indent: 'second' },
+  { side: 'after', rot: -16, y: -1.2, size: 5, lift: -0.3, indent: 'first' },
+];
+
+/** Split a label into two lines, first half / second half by words. */
+const twoLines = (label: string) => {
+  const w = label.split(' ');
+  if (w.length < 2) return [label];
+  const cut = Math.floor(w.length / 2);
+  return [w.slice(0, cut).join(' '), w.slice(cut).join(' ')];
+};
+
+const items = site.traits.map((t, i) => ({ ...t, lines: twoLines(t.label), pose: poses[i % poses.length], i }));
+// Rendered twice so the CSS loop is seamless.
+const loop = [...items, ...items];
+---
+
+<section class="traits" aria-label="A few fun facts about me">
+  <div class="marquee" style="--speed: 95s">
+    <ul class="marquee-track">
+      {loop.map((t, k) => (
+        <li
+          class:list={['trait', `side-${t.pose.side}`, `indent-${t.pose.indent}`]}
+          title={t.note}
+          aria-hidden={k >= items.length ? 'true' : undefined}
+          style={`--rot:${t.pose.rot}deg;--y:${t.pose.y}rem;--size:${t.pose.size}rem;--lift:${t.pose.lift}rem;--delay:${(t.i % 5) * -0.9}s`}
+        >
+          <span class="display trait-label">
+            {t.lines.map((l) => <span class="trait-line">{l}</span>)}
+          </span>
+          <img class="sticker" src={`${base}${t.sticker}`} alt="" width="292" height="292" loading="lazy" decoding="async" />
+        </li>
+      ))}
+    </ul>
+  </div>
+</section>
+
+<style>
+  .traits { padding-block: 1rem; }
+  /* Room above and below so tilted stickers and offset lines never get clipped. */
+  .traits .marquee { padding-block: 2.75rem; }
+  .marquee-track { align-items: center; }
+
+  .trait {
+    position: relative;
+    display: flex;
+    align-items: center;
+    padding-inline: 2.6rem;
+    white-space: nowrap;
+  }
+  .trait-label {
+    position: relative;
+    z-index: 1;
+    display: grid;
+    font-size: var(--display-s);
+    letter-spacing: -0.035em;
+    line-height: 0.95;
+    transform: translateY(var(--lift));
+  }
+  .indent-first .trait-line:first-child { padding-left: 1.6em; }
+  .indent-second .trait-line:last-child { padding-left: 1.6em; }
+
+  /* The sticker overlaps the text a little, like it was slapped on. */
+  .sticker {
+    position: relative;
+    z-index: 2;
+    flex: none;
+    width: var(--size);
+    height: var(--size);
+    object-fit: contain;
+    transform: translateY(var(--y)) rotate(var(--rot));
+    filter: drop-shadow(0 8px 10px rgba(0, 30, 110, 0.22)) drop-shadow(0 1px 1px rgba(0, 0, 0, 0.12));
+    transition: transform 0.5s var(--ease-out);
+    animation: bob 4.2s ease-in-out var(--delay) infinite;
+  }
+  .side-after .sticker { margin-left: -1.1rem; }
+  .side-before { flex-direction: row-reverse; }
+  .side-before .sticker { margin-right: -1rem; }
+  /* Peeking over the top-right corner of the text. */
+  .side-top .sticker {
+    position: absolute;
+    right: 1.2rem;
+    top: -1.6rem;
+    margin: 0;
+  }
+
+  .trait:hover .sticker {
+    animation-play-state: paused;
+    transform: translateY(calc(var(--y) - 0.35rem)) rotate(calc(var(--rot) * -0.6)) scale(1.14);
+  }
+
+  @keyframes bob {
+    0%, 100% { translate: 0 0; }
+    50% { translate: 0 -0.3rem; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .sticker { animation: none; }
+  }
+  @media (max-width: 640px) {
+    .trait { padding-inline: 1.6rem; }
+    .sticker { width: calc(var(--size) * 0.8); height: calc(var(--size) * 0.8); }
+  }
+</style>

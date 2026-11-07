@@ -1,0 +1,94 @@
+---
+import type { CollectionEntry } from 'astro:content';
+import Media from './Media.astro';
+
+interface Props { projects: CollectionEntry<'projects'>[]; label?: string; head?: boolean }
+const { projects, label = 'Selected works', head = true } = Astro.props;
+const base = import.meta.env.BASE_URL;
+---
+
+<section id="work" class="works wrap section">
+  {head && (
+    <div class="section-head">
+      <h2 class="label">{label}</h2>
+      <span class="label">{String(projects.length).padStart(2, '0')}</span>
+    </div>
+  )}
+  <ul class="grid">
+    {projects.map((p) => (
+      <li class="tile" data-fade>
+        <a href={`${base}work/${p.id}/`} class="tile-link">
+          <div class="tile-media">
+            <Media media={p.data.cover} tone={p.data.tone} />
+            <span class="display tile-title" aria-hidden="true">
+              {(p.data.titleLines ?? [p.data.title]).map((l) => <span>{l}</span>)}
+            </span>
+            <span class="tile-cta">View case →</span>
+          </div>
+          <div class="tile-meta">
+            <span class="label">{p.data.client}</span>
+            <span class="tile-name">{p.data.title}</span>
+            <span class="tile-role">{p.data.role}</span>
+          </div>
+        </a>
+      </li>
+    ))}
+  </ul>
+</section>
+
+<style>
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 3rem var(--gutter);
+  }
+  .tile-media {
+    position: relative;
+    aspect-ratio: 4 / 3;
+    border-radius: var(--radius);
+    overflow: hidden;
+  }
+  .tile-media :global(.media) {
+    transition: transform 0.9s var(--ease-out);
+  }
+  .tile-link:hover .tile-media :global(.media) { transform: scale(1.045); }
+  .tile-title {
+    position: absolute;
+    inset: auto 1.25rem 1.1rem 1.25rem;
+    z-index: 2;
+    display: grid;
+    color: #fff;
+    font-size: clamp(1.75rem, 3.6vw, 3.6rem);
+    text-shadow: 0 2px 30px rgba(0, 0, 0, 0.25);
+  }
+  .tile-cta {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    z-index: 2;
+    padding: 0.45rem 0.8rem;
+    border-radius: 999px;
+    background: #fff;
+    color: var(--accent);
+    font-size: var(--text-s);
+    font-weight: 600;
+    text-transform: uppercase;
+    opacity: 0;
+    transform: translateY(-6px);
+    transition: opacity 0.3s, transform 0.4s var(--ease-out);
+  }
+  .tile-link:hover .tile-cta,
+  .tile-link:focus-visible .tile-cta { opacity: 1; transform: none; }
+  .tile-meta {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 0.2rem 1rem;
+    margin-top: 0.85rem;
+    font-size: var(--text-s);
+  }
+  .tile-name { grid-column: 1; font-weight: 600; text-transform: uppercase; }
+  .tile-role { grid-column: 2; grid-row: 1 / span 2; align-self: start; color: var(--muted); text-transform: uppercase; }
+  @media (max-width: 760px) {
+    .grid { grid-template-columns: 1fr; }
+  }
+</style>

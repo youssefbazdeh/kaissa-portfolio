@@ -1,0 +1,46 @@
+---
+import data from '../data/archive.json';
+import Media from './Media.astro';
+const loop = [...data.items, ...data.items];
+---
+
+<section class="archive section">
+  <div class="wrap head">
+    <h2 class="label">{data.label}</h2>
+    <p class="intro">{data.intro}</p>
+  </div>
+  <div class="marquee" style="--speed: 45s">
+    <ul class="marquee-track">
+      {loop.map((item, i) => {
+        const Tag = item.href ? 'a' : 'div';
+        return (
+          <li class="thumb" aria-hidden={i >= data.items.length ? 'true' : undefined}>
+            <Tag href={item.href || undefined} class="thumb-inner">
+              <div class="thumb-media">
+                <Media media={{ image: item.image, label: item.title, alt: item.title }} tone={item.tone} />
+              </div>
+            </Tag>
+          </li>
+        );
+      })}
+    </ul>
+  </div>
+</section>
+
+<style>
+  .head { display: grid; gap: 0.75rem; margin-bottom: 1.5rem; }
+  .intro {
+    max-width: 62ch;
+    font-size: var(--text-s);
+    font-weight: 500;
+  }
+  .thumb { padding-inline: 0.5rem; }
+  .thumb-media {
+    width: clamp(160px, 18vw, 260px);
+    aspect-ratio: 1;
+    border-radius: 6px;
+    overflow: hidden;
+    transition: transform 0.5s var(--ease-out);
+  }
+  .thumb:hover .thumb-media { transform: translateY(-6px) rotate(-1.5deg); }
+</style>

@@ -1,0 +1,11 @@
+{
+  "label": "Wait, more?",
+  "intro": "In case you just want to hang out here a bit longer, here's more of my published work across social media, content and copy.",
+  "items": [
+    { "title": "Samsung Galaxy Z Flip 6", "image": "", "tone": "#1a1a2e", "href": "" },
+    { "title": "Tata Motors — social posts", "image": "", "tone": "#1f4e79", "href": "" },
+    { "title": "Social content", "image": "", "tone": "#6d4c41", "href": "" },
+    { "title": "Copy & captions", "image": "", "tone": "#2e7d32", "href": "" },
+    { "title": "Brand stories", "image": "", "tone": "#ad1457", "href": "" }
+  ]
+}

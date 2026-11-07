@@ -1,0 +1,34 @@
+/*
+ * Design tokens. Change the look of the whole site from here.
+ * Swap --accent for Kaissa's own colour, or --font-script for another script face
+ * (update the Google Fonts link in src/layouts/Base.astro to match).
+ */
+:root {
+  --accent: #005bff;
+  --accent-soft: #8ca7ff;
+  --bg: #ffffff;
+  --ink: var(--accent); /* all text is the accent, like the reference */
+  --muted: color-mix(in srgb, var(--accent) 45%, white);
+  --line: color-mix(in srgb, var(--accent) 22%, white);
+
+  --font-sans: 'Inter', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --font-script: 'Pinyon Script', 'Snell Roundhand', cursive;
+
+  /* Display type: uppercase, very tight. Sizes scale with the viewport. */
+  --display-xl: clamp(3.25rem, 14.2vw, 16rem); /* hero: widest line must fit */
+  --display-l: clamp(3.25rem, 11vw, 11rem); /* section titles */
+  --display-m: clamp(2.25rem, 6.4vw, 6.5rem); /* case titles, statements */
+  --display-s: clamp(1.25rem, 2.2vw, 2rem); /* traits */
+  --display-tracking: -0.065em;
+  --display-leading: 0.84;
+
+  --text-l: clamp(1.25rem, 2vw, 1.75rem); /* about paragraph */
+  --text-m: 1rem;
+  --text-s: 0.8125rem; /* labels, small print */
+
+  --gutter: clamp(1rem, 2.2vw, 2rem);
+  --section: clamp(6rem, 14vw, 13rem); /* vertical rhythm between sections */
+  --radius: 10px;
+
+  --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+}

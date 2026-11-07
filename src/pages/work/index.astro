@@ -1,0 +1,27 @@
+---
+import { getCollection } from 'astro:content';
+import Base from '../../layouts/Base.astro';
+import TopBar from '../../components/TopBar.astro';
+import PageHead from '../../components/PageHead.astro';
+import WorksGrid from '../../components/WorksGrid.astro';
+import Freestyle from '../../components/Freestyle.astro';
+import Archive from '../../components/Archive.astro';
+
+const projects = (await getCollection('projects', (p) => !p.data.draft))
+  .sort((a, b) => a.data.order - b.data.order);
+---
+
+<Base title="Works">
+  <TopBar />
+  <main>
+    <PageHead
+      label="Works"
+      lines={['SELECTED', 'WORKS']}
+      script="& stories"
+      intro="Campaigns, content and events I've written, conceptualized and brought to life."
+    />
+    <WorksGrid projects={projects} label="All projects" />
+    <Freestyle />
+    <Archive />
+  </main>
+</Base>
